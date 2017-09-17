@@ -2,6 +2,11 @@ import { Router } from "express";
 import fs from "fs";
 import FileDB from "../../utils/FileDB";
 import { FILEDB } from "../../config";
+import logger from "../../utils/logger";
+import {
+  checkMongoConnection,
+  authenticateUserSCM
+} from "../../utils/connection";
 
 const ConfigRoutes = new Router();
 
@@ -47,6 +52,23 @@ ConfigRoutes.post("/configure", async (req, res) => {
     res.json({
       success: false,
       message: "Something went wrong"
+    });
+  }
+});
+
+ConfigRoutes.post("/checkConnection", async (req, res) => {
+  try {
+    let connection = await checkMongoConnection(req.body.mongoURL);
+    authenticateUserSCM("santhoshRaju91", "Jarvis@123");
+    res.json({
+      success: true,
+      connected: true
+    });
+  } catch (err) {
+    logger.error(`Could not connect to MONGODB: ${err}`);
+    res.json({
+      success: false,
+      connected: false
     });
   }
 });

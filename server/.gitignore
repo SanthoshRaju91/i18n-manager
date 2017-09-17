@@ -2,3 +2,5 @@ node_modules
 mirage
 logs/development.log
 logs/production.log
+npm-debug.log
+test.js

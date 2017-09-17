@@ -25,12 +25,17 @@
     "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.18.1",
     "cors": "^2.8.4",
+    "curlrequest": "^1.0.1",
     "express": "^4.15.4",
+    "github": "^11.0.0",
     "glob": "^7.1.2",
     "logger": "0.0.1",
     "lowdb": "^1.0.0",
+    "mongodb": "^2.2.31",
     "mongoose": "^4.11.11",
-    "morgan": "^1.8.2"
+    "morgan": "^1.8.2",
+    "node-libcurl": "^1.2.0",
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
