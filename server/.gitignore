@@ -4,3 +4,4 @@ logs/development.log
 logs/production.log
 npm-debug.log
 test.js
+db

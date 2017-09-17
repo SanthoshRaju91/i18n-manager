@@ -42,6 +42,12 @@ export const authenticateUserSCM = async (username, password) => {
           if (err) {
             logger.error(`Error in authenticating: ${err}`);
             reject(err);
+          } else if (
+            JSON.parse(response).message ||
+            JSON.parse(response).message === "Bad credentials"
+          ) {
+            logger.error(`Error in authenticating: ${response}`);
+            reject(response);
           } else {
             logger.log("authenticated git account");
             resolve(response);
@@ -62,6 +68,12 @@ export const authenticateUserSCM = async (username, password) => {
               `Error in authenticating ${config.scm} account : ${err}`
             );
             reject(err);
+          } else if (
+            JSON.parse(response).message ||
+            JSON.parse(response).message === "Bad credentials"
+          ) {
+            logger.error(`Error in authenticating : ${response}`);
+            reject(response);
           } else {
             logger.log(`Authenticated ${config.scm} account`);
             resolve(response);

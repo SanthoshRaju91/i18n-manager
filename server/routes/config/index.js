@@ -33,6 +33,10 @@ ConfigRoutes.get("/getAppConfig", (req, res) => {
   }
 });
 
+/**
+* Request API for configuring the app
+* @API configure
+*/
 ConfigRoutes.post("/configure", async (req, res) => {
   let config = {
     name: req.body.name,
@@ -56,10 +60,13 @@ ConfigRoutes.post("/configure", async (req, res) => {
   }
 });
 
+/**
+* Request API for checking the connection to mongodb
+* @API checkConnection
+*/
 ConfigRoutes.post("/checkConnection", async (req, res) => {
   try {
     let connection = await checkMongoConnection(req.body.mongoURL);
-    authenticateUserSCM("santhoshRaju91", "Jarvis@123");
     res.json({
       success: true,
       connected: true
