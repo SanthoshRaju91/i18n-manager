@@ -8,18 +8,20 @@ import fs from "fs";
 let should = chai.should();
 chai.use(chaiHTTP);
 
-glob("mirage/*.json", (err, files) => {
-  if (err) {
-    console.error(`Error in deleting files: ${err}`);
-  } else {
-    files.map(current => {
-      fs.unlink(current);
+describe("App configuration with FILE DB", () => {
+  before(() => {
+    glob("mirage/*.json", (err, files) => {
+      if (err) {
+        console.error(`Error in deleting files: ${err}`);
+      } else {
+        files.map(current => {
+          fs.unlink(current);
+        });
+      }
     });
-  }
-});
+  });
 
-describe("Application config requests", () => {
-  it("getAppConfig: it should return empty app config for the first initial run", done => {
+  it("api/getAppConfig: it should return empty app config for the first initial run", done => {
     chai.request(server).get("/api/getAppConfig").end((err, res) => {
       if (err) {
         console.error(`Error: ${err}`);
@@ -37,7 +39,7 @@ describe("Application config requests", () => {
     });
   });
 
-  it("getAppConfig: it should configure the application with the given options", done => {
+  it("api/configure: it should configure the application with the given options", done => {
     let payload = {
       name: "SCB SFP",
       store: "FILE",
@@ -63,7 +65,7 @@ describe("Application config requests", () => {
       });
   });
 
-  it("getAppConfig: it should get the application config", done => {
+  it("api/getAppConfig: it should get the application config", done => {
     chai.request(server).get("/api/getAppConfig").end((err, res) => {
       if (err) {
         console.error(`Error : ${err}`);
@@ -76,5 +78,41 @@ describe("Application config requests", () => {
       }
       done();
     });
+  });
+});
+
+describe("App configuration with MongoDB", () => {
+  before(() => {
+    glob("mirage/*.json", (err, files) => {
+      if (err) {
+        console.error(`Error in deleting files: ${err}`);
+        throw new Error(err);
+      } else {
+        files.map(current => {
+          fs.unlink(current);
+        });
+      }
+    });
+  });
+
+  it("api/checkConnection: it should confirm connection with mongoDB", done => {
+    chai
+      .request(server)
+      .post("/api/checkConnection")
+      .send({
+        mongoURL: "mongodb://root:root@ds127958.mlab.com:27958/frontendstack"
+      })
+      .end((err, res) => {
+        if (err) {
+          console.error(`Error in connecting to mongoDB database: ${err}`);
+          throw new Error(err);
+        } else {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have.property("success").eql(true);
+          res.body.should.have.property("connected").eql(true);
+        }
+        done();
+      });
   });
 });
