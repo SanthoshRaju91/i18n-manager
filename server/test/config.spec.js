@@ -74,6 +74,7 @@ describe("App configuration with FILE DB", () => {
         res.should.have.status(200);
         res.body.should.be.a("object");
         res.body.should.have.property("success").eql(true);
+        res.body.should.have.property("salt");
         res.body.should.have.property("config");
       }
       done();
@@ -111,6 +112,52 @@ describe("App configuration with MongoDB", () => {
           res.body.should.be.a("object");
           res.body.should.have.property("success").eql(true);
           res.body.should.have.property("connected").eql(true);
+        }
+        done();
+      });
+  });
+
+  it("api/configure: it should configure the mongoDB connection", done => {
+    let payload = {
+      name: "Application name",
+      store: "DB",
+      scm: "GIT",
+      scmURL: "https://api.github.com/user",
+      mongoURL: "mongodb://root:root@ds127958.mlab.com:27958/frontendstack"
+    };
+
+    chai
+      .request(server)
+      .post("/api/checkConnection")
+      .send({
+        mongoURL: payload.mongoURL
+      })
+      .end((err, res) => {
+        if (err) {
+          console.error(`Error in establishing connection to mongoDB: ${err}`);
+          throw new Error(err);
+        } else {
+          res.should.have.status(200);
+          res.should.be.a("object");
+          if (res.body.should.have.property("connected").eql(true)) {
+            chai
+              .request(server)
+              .post("/api/configure")
+              .send(payload)
+              .end((err1, response) => {
+                if (err1) {
+                  console.error(
+                    `Error in configuring the Application: ${err1}`
+                  );
+                  throw new Error(err);
+                } else {
+                  response.should.have.status(200);
+                  response.should.be.a("object");
+                  response.should.have.property("success").eql(true);
+                  response.should.have.property("config");
+                }
+              });
+          }
         }
         done();
       });
