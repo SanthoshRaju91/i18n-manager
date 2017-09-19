@@ -6,15 +6,14 @@ import express from "express";
 import { PORT } from "./config";
 import logger from "./utils/logger";
 import middlewares from "./config/middleware";
-import { ConfigRoutes } from "./routes";
+import { ConfigRoutes, LanguageRoutes } from "./routes";
 
 // creating an express application instance
 const app = new express();
 
 // applying middlewares for server instance
 middlewares(app);
-
-app.use("/api", [ConfigRoutes]);
+app.use("/api", [ConfigRoutes, LanguageRoutes]);
 
 // listening on server configured PORT
 app.listen(PORT, err => {

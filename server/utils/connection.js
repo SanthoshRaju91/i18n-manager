@@ -1,7 +1,11 @@
 import { MongoClient } from "mongodb";
 import logger from "./logger";
-import config from "../db/config.json";
 import curl from "curlrequest";
+import { SECRET } from "../config";
+import crypto from "crypto";
+import cryptoJS from "crypto-js";
+import FileDB from "./FileDB";
+import { FILEDB } from "../config";
 
 /**
 * Function to establish a connection with MongoDB on DB configuration
@@ -32,7 +36,7 @@ export const checkMongoConnection = async (url = "") => {
 * @param username - SCM username
 * @param password - SCM password
 */
-export const authenticateUserSCM = async (username, password) => {
+export const authenticateUserSCM = async (config, username, password) => {
   return await new Promise((resolve, reject) => {
     if (config.scm === "GIT") {
       let gitURL = config.scmURL;
@@ -82,4 +86,65 @@ export const authenticateUserSCM = async (username, password) => {
       );
     }
   });
+};
+
+/**
+* Function to generate a authentication salt.
+* @method generateSalt
+*/
+export const generateSalt = () => {
+  try {
+    let salt = crypto.createHash("md5").update(SECRET).digest("hex");
+    let instance = new FileDB("salt.json");
+    instance.writeData({ salt });
+  } catch (err) {
+    logger.error(`Something went wrong in generating salt: ${err}`);
+    return err;
+  }
+};
+
+/**
+* Function to read the generated salt from file db
+* @method readSalt
+*/
+export const readSalt = () => {
+  try {
+    let instance = new FileDB("salt.json");
+    return instance.getData().salt;
+  } catch (err) {
+    logger.error(`Something went wrong while reading the salt: ${err}`);
+    return err;
+  }
+};
+
+/**
+* Function to encrypt the password, this is helper internally for test cases.
+* @method encryptPassword
+* @param password - user provided password
+* @param salt - backend generated salt
+*/
+export const encryptPassword = (password, salt) => {
+  try {
+    let cpassword = cryptoJS.AES.encrypt(password, salt);
+    return cpassword;
+  } catch (err) {
+    logger.error(`Something went wrong in generating password crypt: ${err}`);
+    return err;
+  }
+};
+
+/**
+* Function to decrypt the password.
+* @method decryptPassword
+* @param passwordHash - Hashed password
+* @param salt - backend generated salt
+*/
+export const decryptPassword = (passwordHash, salt) => {
+  try {
+    let password = cryptoJS.AES.decrypt(passwordHash.toString(), salt);
+    return password.toString(cryptoJS.enc.Utf8);
+  } catch (err) {
+    logger.error(`Error in decrypting the password: ${err}`);
+    return err;
+  }
 };
