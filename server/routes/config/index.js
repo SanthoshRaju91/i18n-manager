@@ -3,9 +3,12 @@ import fs from "fs";
 import FileDB from "../../utils/FileDB";
 import { FILEDB } from "../../config";
 import logger from "../../utils/logger";
+
 import {
   checkMongoConnection,
-  authenticateUserSCM
+  authenticateUserSCM,
+  generateSalt,
+  readSalt
 } from "../../utils/connection";
 
 const ConfigRoutes = new Router();
@@ -26,8 +29,10 @@ ConfigRoutes.get("/getAppConfig", (req, res) => {
   } else {
     let instance = new FileDB("config.json");
     let config = instance.getData();
+
     res.json({
       success: true,
+      salt: readSalt(),
       config
     });
   }

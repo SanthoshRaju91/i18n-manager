@@ -11,5 +11,6 @@ const logFileName =
 module.exports = {
   PORT: ENV === "production" ? 9000 : 3000,
   LOGS: logFileName,
-  FILEDB: ENV === "test" ? "mirage" : "db"
+  FILEDB: ENV === "test" ? "mirage" : "db",
+  SECRET: "Somethingsecret"
 };
