@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "i18n manager app",
   "scripts": {
-    "start":"webpack-dev-server --host 0.0.0.0 --hot",
+    "start": "webpack-dev-server --host 0.0.0.0 --hot",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"NODE_ENV = production webpack -p"
+    "build": "webpack -p"
   },
   "author": "Naina Godhwani",
   "license": "ISC",
