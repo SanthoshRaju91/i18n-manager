@@ -1,17 +1,17 @@
-import "babel-polyfill";
-import chai from "chai";
-import chaiHTTP from "chai-http";
-import server from "../server";
-import glob from "glob";
-import fs from "fs";
-import { readSalt, encryptPassword } from "../utils/connection";
+import 'babel-polyfill';
+import chai from 'chai';
+import chaiHTTP from 'chai-http';
+import server from '../server';
+import glob from 'glob';
+import fs from 'fs';
+import { readSalt, encryptPassword } from '../utils/connection';
 
 let should = chai.should();
 chai.use(chaiHTTP);
 
-describe("Add New Language", () => {
+describe('Add New Language', () => {
   before(() => {
-    glob("mirage/*.json", (err, files) => {
+    glob('mirage/*.json', (err, files) => {
       if (err) {
         console.error(`Error in deleting files: ${err}`);
       } else {
@@ -22,21 +22,21 @@ describe("Add New Language", () => {
     });
   });
 
-  it("/api/addNewLanguage", done => {
+  it('/api/addNewLanguage', done => {
     let salt = readSalt();
-    let cPassword = encryptPassword("Jarvis@123", salt);
+    let cPassword = encryptPassword('Jarvis@123', salt);
     chai
       .request(server)
-      .post("/api/addNewLanguage")
+      .post('/api/addNewLanguage')
       .send({
-        username: "santhoshRaju91",
+        username: 'santhoshRaju91',
         password: cPassword,
         data: {
-          key: "en",
-          label: "English",
+          key: 'en',
+          label: 'English',
           translation: {
             login: {
-              message: "Welcome to login page"
+              message: 'Welcome to login page'
             }
           }
         }
@@ -47,9 +47,9 @@ describe("Add New Language", () => {
           throw new Error(err);
         } else {
           res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("success").eql(true);
-          res.body.should.have.property("message").eql("New language added");
+          res.body.should.be.a('object');
+          res.body.should.have.property('success').eql(true);
+          res.body.should.have.property('message').eql('New language added');
         }
         done();
       });
