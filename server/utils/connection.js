@@ -110,7 +110,15 @@ export const generateSalt = () => {
 export const readSalt = () => {
   try {
     let instance = new FileDB("salt.json");
-    return instance.getData().salt;
+    let { salt } = instance.getData();
+    if (salt) {
+      return salt;
+    } else {
+      let genSalt = crypto.createHash("md5").update(SECRET).digest("hex");
+      instance.writeData({ salt: genSalt });
+      salt = instance.getData().salt;
+      return salt;
+    }
   } catch (err) {
     logger.error(`Something went wrong while reading the salt: ${err}`);
     return err;

@@ -1,7 +1,7 @@
-import lowdb from "lowdb";
-import FileSync from "lowdb/adapters/FileSync";
-import logger from "../utils/logger";
-import { FILEDB } from "../config";
+import lowdb from 'lowdb';
+import FileSync from 'lowdb/adapters/FileSync';
+import logger from '../utils/logger';
+import { FILEDB } from '../config';
 
 export default class FileDB {
   /**
