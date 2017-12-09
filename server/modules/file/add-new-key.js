@@ -1,5 +1,6 @@
 import FileDB from '../../utils/FileDB';
 import logger from '../../utils/logger';
+import setByPath from '../../utils/objecter';
 
 /**
 * Function to add new key to the translation json files
@@ -33,16 +34,3 @@ export const addNewKey = data => {
     }
   });
 };
-
-function setByPath(obj, path, value) {
-  var parts = path.split('.');
-  var o = obj;
-  if (parts.length > 1) {
-    for (var i = 0; i < parts.length - 1; i++) {
-      if (!o[parts[i]]) o[parts[i]] = {};
-      o = o[parts[i]];
-    }
-  }
-
-  o[parts[parts.length - 1]] = value;
-}
