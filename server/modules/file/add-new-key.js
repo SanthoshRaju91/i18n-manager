@@ -7,7 +7,7 @@ import setByPath from '../../utils/objecter';
 * @method addNewKey
 * @param data
 */
-export const addNewKey = data => {
+const addNewKey = data => {
   return new Promise((resolve, reject) => {
     var { keyPath, key, value } = data;
 
@@ -34,3 +34,5 @@ export const addNewKey = data => {
     }
   });
 };
+
+export default addNewKey;

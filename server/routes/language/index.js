@@ -1,80 +1,65 @@
 import { Router } from 'express';
-
-import {
-  authenticateUserSCM,
-  decryptPassword,
-  readSalt
-} from '../../utils/connection';
-
 import logger from '../../utils/logger';
+
 import {
   addNewLanguageAPI,
   addNewKeyAPI,
-  updateKeysValueAPI
+  updateKeysValueAPI,
+  getTranslation
 } from '../../modules/api-language';
 
 const LanguageRoutes = new Router();
 
-LanguageRoutes.post('/addNewLanguage', async (req, res) => {
+LanguageRoutes.post('/addNewLanguage', (req, res, next) => {
   try {
-    let { username, password, data } = req.body;
-    // let salt = readSalt();
-    // let dPassword = decryptPassword(password, salt);
+    let { data } = req.body;
 
-    // let response = await authenticateUserSCM(username, password);
-    let response = true;
-    if (response) {
-      let addResponse = addNewLanguageAPI(data);
-      if (addResponse) {
-        res.json({
-          success: true,
-          message: 'New language added'
-        });
-      } else {
-        throw 'Could not add new language';
-      }
+    let addResponse = addNewLanguageAPI(data);
+
+    if (addResponse) {
+      res.status(200).json({
+        success: true,
+        message: 'New language added'
+      });
     } else {
-      throw response;
+      throw 'Could not add new language';
     }
   } catch (err) {
-    logger.error(`Something went wrong while adding new language: ${err}`);
-    res.json({
-      success: false,
-      message: 'Something went wrong'
-    });
+    next(err);
   }
 });
 
-LanguageRoutes.post('/addNewKey', async (req, res) => {
+LanguageRoutes.post('/addNewKey', (req, res, next) => {
   try {
-    let { username, password, data } = req.body;
-    // let salt = readSalt();
-    // let dPassword = decryptPassword(password, salt);
+    let { data } = req.body;
 
-    // let response = await authenticateUserSCM(username, password);
-    let response = true;
-    if (response) {
-      let newKey = addNewKeyAPI(data);
+    let newKey = addNewKeyAPI(data);
 
-      if (newKey) {
-        res.json({
-          success: true,
-          message: 'New key added to the path'
-        });
-      } else {
-        throw 'Could not add new key';
-      }
+    if (newKey) {
+      res.status(200).json({
+        success: true,
+        message: 'New key added to the path'
+      });
     } else {
-      throw response;
+      throw 'Could not add new key';
     }
   } catch (err) {
-    logger.error(
-      `Something went wrong while adding new key to language: ${err}`
-    );
-    res.json({
-      success: false,
-      message: 'Something went wrong'
+    next(err);
+  }
+});
+
+LanguageRoutes.get('/getTranslation/:lang', async (req, res, next) => {
+  try {
+    let { lang } = req.params;
+
+    let translations = await getTranslation(lang);
+
+    res.status(200).json({
+      success: true,
+      translations
     });
+  } catch (err) {
+    next(err);
   }
 });
 
