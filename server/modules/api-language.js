@@ -3,6 +3,7 @@ import addNewLanguage from './file/add-new-language';
 import addNewKey from './file/add-new-key';
 import updateKeysValue from './file/update-keys-value';
 import getTranslationFromFile from './file/get-translation';
+import deleteKeyFromFile from './file/delete-key';
 
 import logger from '../utils/logger';
 
@@ -74,5 +75,20 @@ export const getTranslation = async lang => {
       `Could not fetch translation for the language ${data.lang} - ${err}`
     );
     return {};
+  }
+};
+
+export const deleteKeyAPI = async data => {
+  try {
+    if (store === DB_STORE) {
+    } else if (store === FILE_STORE) {
+      let { keyPath } = data;
+      let deleted = await deleteKeyFromFile(keyPath);
+
+      return deleted || false;
+    }
+  } catch (err) {
+    logger.error(`Error in deleting the key ${err}`);
+    return false;
   }
 };

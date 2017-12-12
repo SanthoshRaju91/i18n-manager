@@ -3,63 +3,20 @@
 * Server listens on PORT 3000 (for development) & 9000 (for production)
 */
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import { PORT, SECRET } from './config';
 import logger from './utils/logger';
-import middlewares from './config/middleware';
+import * as middlewares from './config/middleware';
 import { ConfigRoutes, LanguageRoutes, AuthRoutes } from './routes';
 
 // creating an express application instance
 const app = new express();
 
 // applying middlewares for server instance
-middlewares(app);
-
-/**
-* Authorization middleware for authorizing each requests.
-* @method authMiddleware
-*/
-function authMiddleware() {
-  return function(req, res, next) {
-    if (req.headers['authorization']) {
-      let token = req.headers['authorization'];
-
-      if (token) {
-        try {
-          let verified = jwt.verify(token, SECRET);
-
-          if (verified.username) {
-            next();
-          } else {
-            res.status(403).json({
-              success: false,
-              message: 'unauthorized access'
-            });
-          }
-        } catch (err) {
-          res.status(403).json({
-            success: false,
-            message: 'Invalid token'
-          });
-        }
-      } else {
-        res.status(403).json({
-          success: false,
-          message: 'Token not found'
-        });
-      }
-    } else {
-      res.status(403).json({
-        success: false,
-        message: 'Authorization header missing'
-      });
-    }
-  };
-}
+middlewares.appMiddleware(app);
 
 app.use('/', [ConfigRoutes, AuthRoutes]);
 
-app.use('/api', authMiddleware(), [LanguageRoutes]);
+app.use('/api', middlewares.authMiddleware(), [LanguageRoutes]);
 
 // listening on server configured PORT
 app.listen(PORT, err => {

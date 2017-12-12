@@ -5,6 +5,7 @@ import {
   addNewLanguageAPI,
   addNewKeyAPI,
   updateKeysValueAPI,
+  deleteKeyAPI,
   getTranslation
 } from '../../modules/api-language';
 
@@ -58,6 +59,35 @@ LanguageRoutes.get('/getTranslation/:lang', async (req, res, next) => {
       success: true,
       translations
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+LanguageRoutes.post('/update', async (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+});
+
+LanguageRoutes.post('/delete', (req, res, next) => {
+  try {
+    let { data } = req.body;
+
+    let deleted = deleteKeyAPI(data);
+
+    if (deleted) {
+      res.status(200).json({
+        success: true,
+        message: 'Deleted'
+      });
+    } else {
+      res.status(200).json({
+        success: false,
+        message: 'Unable to delete'
+      });
+    }
   } catch (err) {
     next(err);
   }
