@@ -1,11 +1,12 @@
-
+import logger from '../../utils/logger';
+import FileDB from '../../utils/FileDB';
 
 /**
 * Function to update given key's value for the selected language.
 * @method updateKeysValue
 * @param data
 */
-export const updateKeysValue = data => {
+export default const updateKeysValue = data => {
 
   return new Promise((resolve, reject) => {
     var { lang, translation } = data;

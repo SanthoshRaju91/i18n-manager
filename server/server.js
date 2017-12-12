@@ -13,6 +13,7 @@ const app = new express();
 
 // applying middlewares for server instance
 middlewares(app);
+
 app.use('/api', [ConfigRoutes, LanguageRoutes]);
 
 // listening on server configured PORT
