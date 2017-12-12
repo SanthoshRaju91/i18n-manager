@@ -6,18 +6,21 @@ import FileDB from '../../utils/FileDB';
 * @method getTranslationFromFile
 * @param lang
 */
-export default const getTranslationFromFile = (lang = 'en') => {
+
+const getTranslationFromFile = (lang = 'en') => {
   return new Promise((resolve, reject) => {
     try {
       let langTranslation = new FileDB(`translations/${lang}.json`);
 
-       let translation = langTranslation.getData();
+      let translation = langTranslation.getData();
 
-       resolve({
-         translation
-       });
+      resolve({
+        translation
+      });
     } catch (err) {
       reject(err);
     }
   });
-}
+};
+
+export default getTranslationFromFile;

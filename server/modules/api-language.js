@@ -61,12 +61,11 @@ export const updateKeysValueAPI = async data => {
   }
 };
 
-export const getTranslation = async data => {
+export const getTranslation = async lang => {
   try {
     if (store === DB_STORE) {
       //TODO: MongoDB wiring
     } else if (store === FILE_STORE) {
-      let { lang } = data;
       let { translation } = await getTranslationFromFile(lang);
       return translation;
     }

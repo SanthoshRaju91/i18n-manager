@@ -6,7 +6,7 @@ import logger from '../../utils/logger';
 * @method addNewLanguage
 * @param data
 */
-export default const addNewLanguage = data => {
+const addNewLanguage = data => {
   return new Promise((resolve, reject) => {
     try {
       let langInstance = new FileDB('language.json');
@@ -25,3 +25,5 @@ export default const addNewLanguage = data => {
     }
   });
 };
+
+export default addNewLanguage;

@@ -54,11 +54,11 @@ LanguageRoutes.post('/addNewKey', (req, res, next) => {
   }
 });
 
-LanguageRoutes.get('/getTranslation', (req, res, next) => {
+LanguageRoutes.get('/getTranslation/:lang', async (req, res, next) => {
   try {
-    let { data } = req.body;
+    let { lang } = req.params;
 
-    let translations = getTranslation(data);
+    let translations = await getTranslation(lang);
 
     res.status(200).json({
       success: true,
