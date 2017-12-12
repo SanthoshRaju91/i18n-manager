@@ -2,12 +2,6 @@ import { Router } from 'express';
 import logger from '../../utils/logger';
 
 import {
-  authenticateUserSCM,
-  decryptPassword,
-  readSalt
-} from '../../utils/connection';
-
-import {
   addNewLanguageAPI,
   addNewKeyAPI,
   updateKeysValueAPI,
