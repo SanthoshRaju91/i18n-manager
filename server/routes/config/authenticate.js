@@ -14,7 +14,6 @@ authRoutes.post('/authenticate', async (req, res, next) => {
     let { name, token } = await authenticateUserSCM(username, password);
 
     if (token) {
-      console.log(name);
       res.status(200).json({
         success: true,
         token,
