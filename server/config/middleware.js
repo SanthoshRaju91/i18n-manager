@@ -32,6 +32,7 @@ export function authMiddleware() {
           let verified = jwt.verify(token, SECRET);
 
           if (verified.username) {
+            req['username'] = verified.username;
             next();
           } else {
             res.status(403).json({
