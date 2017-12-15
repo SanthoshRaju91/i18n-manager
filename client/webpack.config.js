@@ -15,6 +15,7 @@ var config = {
             filename: 'bundle.js',
       },
       devServer: {
+            hot: true,            
             port: 5000, 
             publicPath: "/dist/"
       },
