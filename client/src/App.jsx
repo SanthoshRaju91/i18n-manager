@@ -8,8 +8,10 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1>Checking for render!!</h1>
-                <img src={Show} alt="Show image"/>
+                <div className="container-fluid">
+                    <h3 className="text-center">Checking for render!!</h3>  
+                    <img src={Show} alt="Show image"/>
+                </div>
             </div>
         )
     }
