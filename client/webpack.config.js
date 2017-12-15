@@ -2,22 +2,35 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const ENV = process.env.NODE_ENV || 'development';
 
 const extractSass = new ExtractTextPlugin({
       filename: "[name].[contenthash].css",
-      disable: process.env.NODE_ENV === "development"
+      disable: ENV === "development"
   });
 
+const cssLoader = (ENV === 'production') ? 
+                        ExtractTextPlugin.extract({
+                              use: ['css-loader', 'sass-loader'],
+                              fallback: 'style-loader'
+                        }) : ['style-loader', 'css-loader', 'sass-loader'];
+
 var config = {
-      entry: './src/App.jsx',
+      entry: './src/Index.jsx',
       output: {
             path: path.join(__dirname, 'dist'),
             filename: 'bundle.js',
       },
       devServer: {
-            hot: true,            
-            port: 5000, 
-            publicPath: "/dist/"
+            historyApiFallback: true,         
+            port: 5000
+      },
+      devtool: 'source-map',
+      resolve: {
+            extensions: ['.js', '.jsx'],
+            alias: {
+                  Core: path.resolve(__dirname, 'src/core/')
+            }
       },
       module: {
             loaders: [
@@ -33,14 +46,21 @@ var config = {
                   },
                   {
                         test: /\.scss?$/,
-                        use: ExtractTextPlugin.extract({
-                              use: ['css-loader', 'sass-loader'],
-                              fallback: 'style-loader'
-                        })
+                        use: cssLoader
                   },
                   {
                         test: /\.(jpe?g|gif|png|eot|svg|woff|woff2|ttf)$/,
-                        use: 'file-loader'
+                        use: {
+                              loader: 'file-loader',
+                              options: {
+                                    name(file) {
+                                          if(ENV === 'development') {
+                                                return '[path][name].[ext]';
+                                          }
+                                          return '[hash].[ext]'
+                                    }
+                              }
+                        }
                   }
             ]
       },
@@ -51,7 +71,6 @@ var config = {
                   filename: 'index.html',
                   inject: 'body'
             }),
-
             extractSass
       ]
 };
